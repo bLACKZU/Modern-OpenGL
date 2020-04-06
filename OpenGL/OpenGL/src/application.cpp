@@ -1,7 +1,48 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <string>
+#include <iostream>
+
+static unsigned int compileShader(unsigned int type, const std::string &source)
+{
+	unsigned int id = glCreateShader(GL_VERTEX_SHADER);
+	const char *src = source.c_str();
+	glShaderSource(id, 1, &src, nullptr);
+	glCompileShader(id);
 
 
+	//Exception Handling
+	int result;
+	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+	if (result == GL_FALSE)
+	{
+		int length;
+		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+		char *message = (char*)alloca(length * sizeof(char));
+		glGetShaderInfoLog(id, length, &length, message);
+		std::cout << "Compile error" << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
+		std::cout << message << std::endl;
+		glDeleteShader(id);
+		return 0;
+	}
+
+
+	return id;
+}
+static unsigned int createShader(const std::string &vertexShader, const std::string &fragmentShader)
+{
+	unsigned int program = glCreateProgram();
+	unsigned int vS = compileShader(GL_VERTEX_SHADER, vertexShader);
+	unsigned int fS = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
+	glAttachShader(program, vS);
+	glAttachShader(program, fS);
+	glLinkProgram(program);
+	glValidateProgram(program);
+
+	glDeleteShader(vS);
+	glDeleteShader(fS);
+	return program;
+}
 int main(void)
 {
 	GLFWwindow* window;
