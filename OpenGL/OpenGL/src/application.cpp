@@ -6,11 +6,12 @@ int main(void)
 {
 	GLFWwindow* window;
 
+	//glewExperimental = GL_TRUE;
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
-
-	glewInit();
+	
+	//glewInit();
 
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
@@ -21,8 +22,9 @@ int main(void)
 	}
 
 	/* Make the window's context current */
+	
 	glfwMakeContextCurrent(window);
-
+	glewInit();
 	float vertices[6] = {
 
 		-0.5f, -0.5f,
@@ -32,7 +34,7 @@ int main(void)
 	unsigned int buffer;
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 	
