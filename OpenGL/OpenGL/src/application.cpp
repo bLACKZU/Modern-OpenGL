@@ -2,8 +2,22 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include <iostream>
+#include <assimp/ai_assert.h>
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
+#include <gtc\type_ptr.hpp>
+#include <vector>
+#include <string>
+#include "Shader.h"
 
-static unsigned int compileShader(unsigned int type, const std::string &source)
+/*
+void setFloat(const std::string &name, float value)
+{
+	unsigned int id = createShader(vertexShader, fragmentShader);
+	glUniform1f(glGetUniformLocation(id, name.c_str()), value);
+}
+
+unsigned int compileShader(unsigned int type, const std::string &source)
 {
 	unsigned int id = glCreateShader(type);
 	const char *src = source.c_str();
@@ -29,7 +43,7 @@ static unsigned int compileShader(unsigned int type, const std::string &source)
 
 	return id;
 }
-static unsigned int createShader(const std::string &vertexShader, const std::string &fragmentShader)
+unsigned int createShader(const std::string &vertexShader, const std::string &fragmentShader)
 {
 	unsigned int program = glCreateProgram();
 	unsigned int vS = compileShader(GL_VERTEX_SHADER, vertexShader);
@@ -42,7 +56,7 @@ static unsigned int createShader(const std::string &vertexShader, const std::str
 	glDeleteShader(vS);
 	glDeleteShader(fS);
 	return program;
-}
+}*/
 int main(void)
 {
 	GLFWwindow* window;
@@ -97,10 +111,12 @@ int main(void)
 		"{\n"
 		"	color = vec4(1.0, 0.0, 0.0, 1.0);\n"
 		"}\n";
-	
-	unsigned int shader = createShader(vertexShader, fragmentShader);
-	glUseProgram(shader);
 
+	Shader shader;
+	unsigned int shadR = shader.createShader(vertexShader, fragmentShader);
+	glUseProgram(shadR);
+
+		
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -115,7 +131,7 @@ int main(void)
 		/* Poll for and process events */
 		glfwPollEvents();
 	}
-	glDeleteProgram(shader);
+	glDeleteProgram(shadR);
 
 	glfwTerminate();
 	return 0;
